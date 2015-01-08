@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - cpp/main.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">cpp</a> - main.cpp<span style="font-size: 80%;"> (source / <a href="main.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">71</td>
+            <td class="headerCovTableEntry">77</td>
+            <td class="headerCovTableEntryHi">92.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2015-01-07 18:23:36</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &quot;util.h&quot;</a>
+<span class="lineNum">       2 </span>            : #include &quot;btree.h&quot;
+<span class="lineNum">       3 </span>            : #include &quot;assert.h&quot;
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : using namespace std;
+<span class="lineNum">       6 </span>            : #define MAX (1&lt;&lt;15)
+<a name="7"><span class="lineNum">       7 </span>            : </a>
+<span class="lineNum">       8 </span>            : static void 
+<span class="lineNum">       9 </span><span class="lineCov">       8193 : shuffle_array( int *a, int ub )</span>
+<span class="lineNum">      10 </span>            : {
+<span class="lineNum">      11 </span>            :     int i,j;
+<span class="lineNum">      12 </span>            :     int temp;
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span><span class="lineCov">   33559552 :     for( i=ub-1; i&gt;0; i-- ){</span>
+<span class="lineNum">      15 </span><span class="lineCov">   33551359 :         j = random_in_range(0, i+1);</span>
+<span class="lineNum">      16 </span><span class="lineCov">   33551359 :         temp = a[i];</span>
+<span class="lineNum">      17 </span><span class="lineCov">   33551359 :         a[i]=a[j];</span>
+<span class="lineNum">      18 </span><span class="lineCov">   33551359 :         a[j]=temp;</span>
+<span class="lineNum">      19 </span>            :     }
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span><span class="lineCov">       8193 : }</span>
+<a name="22"><span class="lineNum">      22 </span>            : </a>
+<span class="lineNum">      23 </span>            : static void
+<span class="lineNum">      24 </span><span class="lineCov">       8193 : create_array( int *a, int n, int max ){</span>
+<span class="lineNum">      25 </span>            :     
+<span class="lineNum">      26 </span>            :     int in, im;
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span><span class="lineCov">       8193 :     im = 0;</span>
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span><span class="lineCov">  268038045 :     for (in = 0; in &lt; max &amp;&amp; im &lt; n; ++in) {</span>
+<span class="lineNum">      31 </span><span class="lineCov">  268029852 :         int rn = max - in;</span>
+<span class="lineNum">      32 </span><span class="lineCov">  268029852 :         int rm = n - im;</span>
+<span class="lineNum">      33 </span><span class="lineCov">  268029852 :         if ( random_in_range( 1,max ) % rn &lt; rm)    </span>
+<span class="lineNum">      34 </span>            :             /* Take it */
+<span class="lineNum">      35 </span><span class="lineCov">   33559552 :             a[im++] = in + 1; /* +1 since your range begins from 1 */</span>
+<span class="lineNum">      36 </span>            :     }
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span><span class="lineCov">       8193 :     assert(im == n);</span>
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span><span class="lineCov">       8193 :     shuffle_array( a, n );</span>
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span><span class="lineCov">       8193 : }</span>
+<a name="43"><span class="lineNum">      43 </span>            : </a>
+<span class="lineNum">      44 </span>            : static void
+<span class="lineNum">      45 </span><span class="lineCov">       8195 : reset_array( int *a, int len )</span>
+<span class="lineNum">      46 </span>            : {
+<span class="lineNum">      47 </span>            :     int i;
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span><span class="lineCov">   67127299 :     for( i=0; i&lt;len; i++ )</span>
+<span class="lineNum">      50 </span><span class="lineCov">   67119104 :         a[i]=-1;</span>
+<span class="lineNum">      51 </span><span class="lineCov">       8195 : }</span>
+<a name="52"><span class="lineNum">      52 </span>            : </a>
+<span class="lineNum">      53 </span>            : static int
+<span class="lineNum">      54 </span><span class="lineCov">          1 : tc_0( BTreeClass *bt ){</span>
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : #define TC_0_TRIAL (8192)
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            :     int i, n;
+<span class="lineNum">      59 </span>            :     int result;
+<span class="lineNum">      60 </span><span class="lineCov">          1 :     BTreeObjectClass obj;</span>
+<span class="lineNum">      61 </span>            :     int keys[TC_0_TRIAL];
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span><span class="lineCov">          1 :     result = 0;</span>
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span><span class="lineCov">          1 :     reset_array( &amp;keys[0], TC_0_TRIAL );</span>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span><span class="lineCov">       8193 :     for( n=1; n&lt;=TC_0_TRIAL; n++ ){</span>
+<span class="lineNum">      68 </span>            :     
+<span class="lineNum">      69 </span><span class="lineCov">       8192 :         create_array( &amp;keys[0], n, MAX );</span>
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span><span class="lineCov">   33566720 :         for( i=0; i&lt;n; i++ )</span>
+<span class="lineNum">      72 </span><span class="lineCov">   33558528 :             bt-&gt;insert(keys[i]);</span>
+<span class="lineNum">      73 </span>            :     
+<span class="lineNum">      74 </span><span class="lineCov">       8192 :         cout&lt;&lt; n &lt;&lt; &quot; keys inserted&quot;&lt;&lt;endl;</span>
+<span class="lineNum">      75 </span><span class="lineCov">       8192 :         cout&lt;&lt; &quot;Max key = &quot;&lt;&lt; bt-&gt;max_key()&lt;&lt; &quot; \tMin key = &quot;&lt;&lt; bt-&gt;min_key()&lt;&lt;endl;</span>
+<span class="lineNum">      76 </span><span class="lineCov">       8192 :         cout&lt;&lt; &quot;Tree height = &quot;&lt;&lt; bt-&gt;height()&lt;&lt;endl;</span>
+<span class="lineNum">      77 </span>            :         
+<span class="lineNum">      78 </span>            :         //search test
+<span class="lineNum">      79 </span><span class="lineCov">   67117056 :         for( i=0; i&lt;TC_0_TRIAL; i++ ){</span>
+<span class="lineNum">      80 </span><span class="lineCov">   67108864 :             obj = bt-&gt;search(keys[i]);</span>
+<span class="lineNum">      81 </span><span class="lineCov">   67108864 :             if( i&lt;n &amp;&amp; obj.read_node() )</span>
+<span class="lineNum">      82 </span><span class="lineCov">   33558528 :                 continue;</span>
+<span class="lineNum">      83 </span><span class="lineCov">   33550336 :             if( i&gt;=n &amp;&amp; (!obj.read_node()) )</span>
+<span class="lineNum">      84 </span><span class="lineCov">   33550336 :                 continue;</span>
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :             result = -1;</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">      87 </span>            :         }
+<span class="lineNum">      88 </span>            :        
+<span class="lineNum">      89 </span>            :         //deletion test 
+<span class="lineNum">      90 </span><span class="lineCov">   33566720 :         for( i=0; i&lt;n; i++ )</span>
+<span class="lineNum">      91 </span><span class="lineCov">   33558528 :             bt-&gt;remove(keys[i]);</span>
+<span class="lineNum">      92 </span>            :         
+<span class="lineNum">      93 </span><span class="lineCov">       8192 :         cout&lt;&lt; n &lt;&lt; &quot; keys removed&quot;&lt;&lt;endl;</span>
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineCov">       8192 :         reset_array( &amp;keys[0], TC_0_TRIAL );</span>
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span><span class="lineCov">       8192 :         if( result !=0 )</span>
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :             break;</span>
+<span class="lineNum">      99 </span>            :     }
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span><span class="lineCov">          1 :     if( result != 0 )</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 :         cout&lt;&lt;__func__&lt;&lt;&quot; fails at the &quot;&lt;&lt;n&lt;&lt;&quot;-th trail&quot;&lt;&lt;endl;</span>
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span><span class="lineCov">          1 :     return result;</span>
+<span class="lineNum">     105 </span>            : }
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            : /*
+<span class="lineNum">     108 </span>            :  * Test case 1: traverse the tree
+<a name="109"><span class="lineNum">     109 </span>            :  * */</a>
+<span class="lineNum">     110 </span>            : static bool
+<span class="lineNum">     111 </span><span class="lineCov">          1 : tc_1( BTreeClass *bt ){</span>
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            :     #define TC_1_TRIAL (1024)
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span>            :     int i;
+<span class="lineNum">     116 </span>            :     int result;
+<span class="lineNum">     117 </span>            :     int keys[TC_1_TRIAL];
+<span class="lineNum">     118 </span><span class="lineCov">          1 :     BTreeObjectClass obj;</span>
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span><span class="lineCov">          1 :     reset_array( &amp;keys[0], TC_1_TRIAL );</span>
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span><span class="lineCov">          1 :     result = 0;</span>
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span><span class="lineCov">          1 :     create_array( &amp;keys[0], TC_1_TRIAL, MAX );</span>
+<span class="lineNum">     125 </span>            : 
+<span class="lineNum">     126 </span><span class="lineCov">       1025 :     for( i=0; i&lt;TC_1_TRIAL; i++ )</span>
+<span class="lineNum">     127 </span><span class="lineCov">       1024 :         bt-&gt;insert(keys[i]);</span>
+<span class="lineNum">     128 </span>            :     
+<span class="lineNum">     129 </span><span class="lineCov">          1 :     cout&lt;&lt; TC_1_TRIAL &lt;&lt; &quot; keys inserted&quot;&lt;&lt;endl;</span>
+<span class="lineNum">     130 </span><span class="lineCov">          1 :     cout&lt;&lt; &quot;Max key = &quot;&lt;&lt; bt-&gt;max_key()&lt;&lt; &quot; \tMin key = &quot;&lt;&lt; bt-&gt;min_key()&lt;&lt;endl;</span>
+<span class="lineNum">     131 </span><span class="lineCov">          1 :     cout&lt;&lt; &quot;Tree height = &quot;&lt;&lt; bt-&gt;height()&lt;&lt;endl;</span>
+<span class="lineNum">     132 </span>            :     
+<span class="lineNum">     133 </span><span class="lineCov">          1 :     bt-&gt;traverse();</span>
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :     //deletion all keys
+<span class="lineNum">     136 </span><span class="lineCov">       1025 :     for( i=0; i&lt;TC_1_TRIAL; i++ )</span>
+<span class="lineNum">     137 </span><span class="lineCov">       1024 :         bt-&gt;remove(keys[i]);</span>
+<span class="lineNum">     138 </span>            :     
+<span class="lineNum">     139 </span><span class="lineCov">          1 :     cout&lt;&lt; TC_1_TRIAL &lt;&lt; &quot; keys removed&quot;&lt;&lt;endl;</span>
+<span class="lineNum">     140 </span><span class="lineCov">          1 :     bt-&gt;traverse();</span>
+<span class="lineNum">     141 </span>            :     
+<span class="lineNum">     142 </span><span class="lineCov">          1 :     reset_array( &amp;keys[0], TC_1_TRIAL );</span>
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            : out:
+<span class="lineNum">     145 </span><span class="lineCov">          1 :     if( result != 0 )</span>
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :         cout&lt;&lt;__func__&lt;&lt;&quot; fails&quot;&lt;&lt;endl;</span>
+<span class="lineNum">     147 </span>            : 
+<span class="lineNum">     148 </span><span class="lineCov">          1 :     return result;</span>
+<span class="lineNum">     149 </span>            :    
+<a name="150"><span class="lineNum">     150 </span>            : }</a>
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span><span class="lineCov">          1 : int main(void){</span>
+<span class="lineNum">     153 </span>            :    
+<span class="lineNum">     154 </span>            :     int result;
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span><span class="lineCov">          1 :     BTreeClass *bt = new BTreeClass(3);</span>
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span><span class="lineCov">          1 :     result = tc_0(bt);</span>
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span><span class="lineCov">          1 :     if( result == 0 )</span>
+<span class="lineNum">     161 </span><span class="lineCov">          1 :         result = tc_1(bt);</span>
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span><span class="lineCov">          1 :     if( result!=0 )</span>
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :         cout&lt;&lt;&quot;Unit test fails&quot;&lt;&lt;endl;</span>
+<span class="lineNum">     165 </span>            : /*
+<span class="lineNum">     166 </span>            :  *  
+<span class="lineNum">     167 </span>            :  *  
+<span class="lineNum">     168 </span>            :     BTreeObjectClass *obj = new BTreeObjectClass();
+<span class="lineNum">     169 </span>            :     //insert_1(); 
+<span class="lineNum">     170 </span>            :     insert_2(bt);
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            :     *obj = bt-&gt;search( 6808 );
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span>            :     if( obj-&gt;read_node() ){
+<span class="lineNum">     175 </span>            :         cout&lt;&lt;&quot;Record &quot;&lt;&lt;obj-&gt;read_key()&lt;&lt;&quot; found!\n&quot;;    
+<span class="lineNum">     176 </span>            :     }
+<span class="lineNum">     177 </span>            :     else
+<span class="lineNum">     178 </span>            :         cout&lt;&lt;&quot; Record not found &quot;&lt;&lt;endl;
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            :     cout&lt;&lt; &quot;Height: &quot;&lt;&lt;bt-&gt;height()&lt;&lt; endl;    
+<span class="lineNum">     181 </span>            :     cout&lt;&lt; &quot;Min: &quot;&lt;&lt;bt-&gt;min_key()&lt;&lt; endl;    
+<span class="lineNum">     182 </span>            :     cout&lt;&lt; &quot;Max: &quot;&lt;&lt;bt-&gt;max_key()&lt;&lt; endl;    
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span>            :     Test of predecessor and resultor functions
+<span class="lineNum">     185 </span>            :     
+<span class="lineNum">     186 </span>            :     for( key=1; key&lt;=8192; key++ ){
+<span class="lineNum">     187 </span>            :         bt-&gt;test( key, (void *)obj );
+<span class="lineNum">     188 </span>            :         if( obj-&gt;read_node() ){
+<span class="lineNum">     189 </span>            :             cout&lt;&lt;&quot;Predecessor of key &quot;&lt;&lt;key&lt;&lt;&quot; is &quot;&lt;&lt; obj-&gt;read_key()&lt;&lt;&quot; found!\n&quot;;    
+<span class="lineNum">     190 </span>            :         }
+<span class="lineNum">     191 </span>            :         else
+<span class="lineNum">     192 </span>            :             cout&lt;&lt;&quot;Predecessor of key &quot;&lt;&lt;key&lt;&lt;&quot; not found &quot;&lt;&lt;endl;
+<span class="lineNum">     193 </span>            :     }
+<span class="lineNum">     194 </span>            :     delete obj;
+<span class="lineNum">     195 </span>            : */
+<a name="196"><span class="lineNum">     196 </span><span class="lineCov">          1 :     delete bt;</span></a>
+<span class="lineNum">     197 </span>            : 
+<span class="lineNum">     198 </span><span class="lineCov">          3 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.11</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

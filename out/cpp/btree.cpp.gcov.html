@@ -1,0 +1,662 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - cpp/btree.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">cpp</a> - btree.cpp<span style="font-size: 80%;"> (source / <a href="btree.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">262</td>
+            <td class="headerCovTableEntry">265</td>
+            <td class="headerCovTableEntryHi">98.9 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2015-01-07 18:23:36</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntry">27</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &quot;local.h&quot;</a>
+<span class="lineNum">       2 </span>            : #include &quot;btree.h&quot;
+<a name="3"><span class="lineNum">       3 </span>            : #include &lt;assert.h&gt;</a>
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span><span class="lineCov">          1 : BTreeClass::BTreeClass( int _t )</span>
+<span class="lineNum">       6 </span>            : {
+<span class="lineNum">       7 </span><span class="lineCov">          1 :     t = _t;</span>
+<span class="lineNum">       8 </span><span class="lineCov">          1 :     root = NULL;</span>
+<a name="9"><span class="lineNum">       9 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span><span class="lineCov">          1 : BTreeClass::~BTreeClass( )</span>
+<span class="lineNum">      12 </span>            : {
+<span class="lineNum">      13 </span><span class="lineCov">          1 :     cout&lt;&lt;&quot;BTree object destroyed&quot;&lt;&lt;endl;</span>
+<span class="lineNum">      14 </span><span class="lineCov">          1 : }</span>
+<a name="15"><span class="lineNum">      15 </span>            : </a>
+<span class="lineNum">      16 </span>            : void 
+<span class="lineNum">      17 </span><span class="lineCov">          2 : BTreeClass :: traverse(void)</span>
+<span class="lineNum">      18 </span>            : {
+<span class="lineNum">      19 </span><span class="lineCov">          2 :     cout&lt;&lt; &quot;Traverse the BTree (t=&quot; &lt;&lt; t &lt;&lt; &quot;)&quot;&lt;&lt;endl;</span>
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span><span class="lineCov">          2 :     if( root )</span>
+<span class="lineNum">      22 </span><span class="lineCov">          1 :         root-&gt;traverse();</span>
+<span class="lineNum">      23 </span>            :     else
+<span class="lineNum">      24 </span><span class="lineCov">          1 :         cout&lt;&lt;&quot; The tree is empty&quot;&lt;&lt;endl;</span>
+<span class="lineNum">      25 </span><span class="lineCov">          2 : }</span>
+<a name="26"><span class="lineNum">      26 </span>            : </a>
+<span class="lineNum">      27 </span>            : bool
+<span class="lineNum">      28 </span><span class="lineCov">      16386 : BTreeClass :: empty(void)</span>
+<span class="lineNum">      29 </span>            : {
+<span class="lineNum">      30 </span><span class="lineCov">      16386 :     return root==NULL;</span>
+<span class="lineNum">      31 </span>            : }
+<a name="32"><span class="lineNum">      32 </span>            : </a>
+<span class="lineNum">      33 </span>            : int 
+<span class="lineNum">      34 </span><span class="lineCov">       8193 : BTreeClass::min_key()</span>
+<span class="lineNum">      35 </span>            : {
+<span class="lineNum">      36 </span><span class="lineCov">       8193 :     return empty() ? -1 : _minimum( root );</span>
+<span class="lineNum">      37 </span>            : }
+<a name="38"><span class="lineNum">      38 </span>            : </a>
+<span class="lineNum">      39 </span>            : int
+<span class="lineNum">      40 </span><span class="lineCov">       8193 : BTreeClass::max_key()</span>
+<span class="lineNum">      41 </span>            : {
+<span class="lineNum">      42 </span><span class="lineCov">       8193 :     return empty() ? -1 : _maximum( root );</span>
+<span class="lineNum">      43 </span>            : }
+<a name="44"><span class="lineNum">      44 </span>            : </a>
+<span class="lineNum">      45 </span>            : int
+<span class="lineNum">      46 </span><span class="lineCov">       8193 : BTreeClass::height()</span>
+<span class="lineNum">      47 </span>            : {
+<span class="lineNum">      48 </span><span class="lineCov">       8193 :     BTreeNodeClass *x = root;</span>
+<span class="lineNum">      49 </span><span class="lineCov">       8193 :     int h = 0;</span>
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span><span class="lineCov">      67087 :     while( x ){</span>
+<span class="lineNum">      52 </span><span class="lineCov">      50701 :         h++;</span>
+<span class="lineNum">      53 </span><span class="lineCov">      50701 :         x = x-&gt;C[0];</span>
+<span class="lineNum">      54 </span>            :     }
+<span class="lineNum">      55 </span>            : 
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">       8193 :     return h;</span></a>
+<span class="lineNum">      57 </span>            : }
+<span class="lineNum">      58 </span><span class="lineCov">   33559552 : void BTreeClass::insert( int key )</span>
+<span class="lineNum">      59 </span>            : {
+<span class="lineNum">      60 </span>            :     BTreeNodeClass *r;
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :     //cout&lt;&lt; &quot;Insert key &quot;&lt;&lt; key &lt;&lt; endl;
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span><span class="lineCov">   33559552 :     if( ! root )</span>
+<span class="lineNum">      65 </span><span class="lineCov">       8193 :         root = new BTreeNodeClass(t, 1);</span>
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span><span class="lineCov">   33559552 :     r = root;</span>
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span><span class="lineCov">   33559552 :     if( r-&gt;n==2*t-1 ){</span>
+<span class="lineNum">      70 </span><span class="lineCov">      42508 :         BTreeNodeClass *s = new BTreeNodeClass(t,0);</span>
+<span class="lineNum">      71 </span><span class="lineCov">      42508 :         root = s;</span>
+<span class="lineNum">      72 </span><span class="lineCov">      42508 :         s-&gt;C[0]=r;</span>
+<span class="lineNum">      73 </span><span class="lineCov">      42508 :         _split_child(s,0);</span>
+<span class="lineNum">      74 </span><span class="lineCov">      42508 :         _insert_nonfull(s,key);</span>
+<span class="lineNum">      75 </span>            :     }
+<span class="lineNum">      76 </span>            :     else
+<span class="lineNum">      77 </span><span class="lineCov">   33517044 :         _insert_nonfull(r,key);</span>
+<span class="lineNum">      78 </span><span class="lineCov">   33559552 : }</span>
+<a name="79"><span class="lineNum">      79 </span>            : </a>
+<span class="lineNum">      80 </span>            : BTreeObjectClass
+<span class="lineNum">      81 </span><span class="lineCov">   67108864 : BTreeClass::search( int key )</span>
+<span class="lineNum">      82 </span>            : {
+<span class="lineNum">      83 </span>            :     //may have dest check the key value 
+<span class="lineNum">      84 </span><span class="lineCov">   67108864 :     BTreeObjectClass obj;</span>
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span><span class="lineCov">   67108864 :     obj = _search_subtree(root, key);</span>
+<span class="lineNum">      87 </span>            : 
+<span class="lineNum">      88 </span><span class="lineCov">   67108864 :     if( obj.node )</span>
+<span class="lineNum">      89 </span><span class="lineCov">   33558528 :         obj.assign(key);</span>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span><span class="lineCov">   67108864 :     return obj;</span>
+<span class="lineNum">      92 </span>            : }
+<a name="93"><span class="lineNum">      93 </span>            : </a>
+<span class="lineNum">      94 </span>            : void 
+<span class="lineNum">      95 </span><span class="lineCov">   33559552 : BTreeClass :: remove( int key )</span>
+<span class="lineNum">      96 </span>            : {
+<span class="lineNum">      97 </span>            :     //cout&lt;&lt; &quot;Remove key &quot;&lt;&lt; key &lt;&lt; endl;
+<span class="lineNum">      98 </span><span class="lineCov">   33559552 :     return _descend( root, key, this );</span>
+<span class="lineNum">      99 </span>            : }
+<a name="100"><span class="lineNum">     100 </span>            : </a>
+<span class="lineNum">     101 </span>            : BTreeObjectClass
+<span class="lineNum">     102 </span><span class="lineCov">  404853787 : BTreeClass::_search_subtree( BTreeNodeClass *x, int key )</span>
+<span class="lineNum">     103 </span>            : {
+<span class="lineNum">     104 </span><span class="lineCov">  404853787 :     int i=0;</span>
+<span class="lineNum">     105 </span><span class="lineCov">  404853787 :     BTreeObjectClass obj;</span>
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span><span class="lineCov"> 1090113910 :     while( i&lt;x-&gt;n &amp;&amp; key &gt; x-&gt;keys[i] )</span>
+<span class="lineNum">     108 </span><span class="lineCov">  280406336 :         i++;</span>
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span><span class="lineCov">  404853787 :     if( i&lt;x-&gt;n &amp;&amp; key == x-&gt;keys[i] ){</span>
+<span class="lineNum">     111 </span><span class="lineCov">   33558528 :         obj.node = x;</span>
+<span class="lineNum">     112 </span><span class="lineCov">   33558528 :         obj.index = i;</span>
+<span class="lineNum">     113 </span>            :     }
+<span class="lineNum">     114 </span><span class="lineCov">  371295259 :     else if( x-&gt;leaf ){</span>
+<span class="lineNum">     115 </span><span class="lineCov">   33550336 :         obj.node = NULL;</span>
+<span class="lineNum">     116 </span><span class="lineCov">   33550336 :         obj.index = 0;</span>
+<span class="lineNum">     117 </span>            :     }
+<span class="lineNum">     118 </span>            :     else{
+<span class="lineNum">     119 </span>            :         //DISK_READ(x-&gt;C[i]    
+<span class="lineNum">     120 </span><span class="lineCov">  337744923 :         obj = _search_subtree( x-&gt;C[i], key );</span>
+<span class="lineNum">     121 </span>            :     }
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span><span class="lineCov">  404853787 :     return obj;</span>
+<span class="lineNum">     124 </span>            : }
+<span class="lineNum">     125 </span>            : 
+<span class="lineNum">     126 </span>            : /*
+<span class="lineNum">     127 </span>            :  * move the middle key in of the i-th child of x up, and split the rest keys into 2 nodes
+<a name="128"><span class="lineNum">     128 </span>            :  * */</a>
+<span class="lineNum">     129 </span>            : void 
+<span class="lineNum">     130 </span><span class="lineCov">   10448157 : BTreeClass::_split_child( BTreeNodeClass *x, int i ){</span>
+<span class="lineNum">     131 </span>            :     
+<span class="lineNum">     132 </span>            :     int j;
+<span class="lineNum">     133 </span><span class="lineCov">   10448157 :     int t = x-&gt;t;</span>
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :     BTreeNodeClass *y;
+<span class="lineNum">     136 </span><span class="lineCov">   10448157 :     BTreeNodeClass *z = new BTreeNodeClass(t);</span>
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span><span class="lineCov">   10448157 :     y = x-&gt;C[i];</span>
+<span class="lineNum">     139 </span><span class="lineCov">   10448157 :     z-&gt;leaf = y-&gt;leaf;</span>
+<span class="lineNum">     140 </span><span class="lineCov">   10448157 :     z-&gt;n = t-1;</span>
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span>            :     //move the largest t-1 kyes and t children of y into z
+<span class="lineNum">     143 </span><span class="lineCov">   31344471 :     for( j=0; j&lt;z-&gt;n; j++ ){</span>
+<span class="lineNum">     144 </span><span class="lineCov">   20896314 :         z-&gt;keys[j] = y-&gt;keys[t+j];</span>
+<span class="lineNum">     145 </span>            :     }
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span><span class="lineCov">   10448157 :     if( !y-&gt;leaf )</span>
+<span class="lineNum">     148 </span><span class="lineCov">   10720320 :         for( j=0; j&lt;=z-&gt;n; j++ )</span>
+<span class="lineNum">     149 </span><span class="lineCov">    8040240 :             z-&gt;C[j] = y-&gt;C[t+j];</span>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span><span class="lineCov">   10448157 :     y-&gt;n = t-1;</span>
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :     //shift child pointers in x dest the right dest create a roon for z
+<span class="lineNum">     154 </span><span class="lineCov">   35740216 :     for( j=x-&gt;n+1; j&gt;i; j-- )</span>
+<span class="lineNum">     155 </span><span class="lineCov">   25292059 :         x-&gt;C[j] = x-&gt;C[j-1];</span>
+<span class="lineNum">     156 </span>            :     
+<span class="lineNum">     157 </span><span class="lineCov">   10448157 :     x-&gt;C[i+1] = z;</span>
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span><span class="lineCov">   25292059 :     for( j=x-&gt;n; j&gt;i; j-- )</span>
+<span class="lineNum">     160 </span><span class="lineCov">   14843902 :         x-&gt;keys[j] = x-&gt;keys[j-1];</span>
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span><span class="lineCov">   10448157 :     x-&gt;keys[i] = y-&gt;keys[t-1];</span>
+<span class="lineNum">     163 </span><span class="lineCov">   10448157 :     x-&gt;n ++;</span>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span>            :     //DISK_WRITE(y);
+<span class="lineNum">     166 </span>            :     //DISK_WRITE(z);
+<span class="lineNum">     167 </span>            :     //DISK_WRITE(x);
+<span class="lineNum">     168 </span><span class="lineCov">   10448157 : }</span>
+<a name="169"><span class="lineNum">     169 </span>            : </a>
+<span class="lineNum">     170 </span>            : void
+<span class="lineNum">     171 </span><span class="lineCov">  193342713 : BTreeClass :: _insert_nonfull( BTreeNodeClass *x, int _key )</span>
+<span class="lineNum">     172 </span>            : {
+<span class="lineNum">     173 </span><span class="lineCov">  193342713 :     int i = x-&gt;n;</span>
+<span class="lineNum">     174 </span><span class="lineCov">  193342713 :     int t = x-&gt;t;</span>
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span><span class="lineCov">  193342713 :     if( x-&gt;leaf ){</span>
+<span class="lineNum">     177 </span><span class="lineCov">  115170673 :         while( i&gt;=1 &amp;&amp; _key&lt;x-&gt;keys[i-1] ){</span>
+<span class="lineNum">     178 </span><span class="lineCov">   48051569 :             x-&gt;keys[i] = x-&gt;keys[i-1];</span>
+<span class="lineNum">     179 </span><span class="lineCov">   48051569 :             i--;</span>
+<span class="lineNum">     180 </span>            :         }
+<span class="lineNum">     181 </span><span class="lineCov">   33559552 :         x-&gt;keys[i] = _key;</span>
+<span class="lineNum">     182 </span><span class="lineCov">   33559552 :         x-&gt;n++;</span>
+<span class="lineNum">     183 </span>            :         // DISK-WRITE(x);
+<span class="lineNum">     184 </span>            :     }
+<span class="lineNum">     185 </span>            :     else{
+<span class="lineNum">     186 </span><span class="lineCov">  534760892 :         while( i&gt;=1 &amp;&amp; _key&lt;x-&gt;keys[i-1] )</span>
+<span class="lineNum">     187 </span><span class="lineCov">  215194570 :             i--;</span>
+<span class="lineNum">     188 </span><span class="lineCov">  159783161 :         i = i + 1;</span>
+<span class="lineNum">     189 </span>            :         // DISK-READ(x.C[i]);
+<span class="lineNum">     190 </span><span class="lineCov">  159783161 :         if( x-&gt;C[i-1]-&gt;n == 2*t-1 ){</span>
+<span class="lineNum">     191 </span><span class="lineCov">   10405649 :             _split_child( x, i-1 );</span>
+<span class="lineNum">     192 </span><span class="lineCov">   10405649 :             if( _key&gt;x-&gt;keys[i-1])</span>
+<span class="lineNum">     193 </span><span class="lineCov">    5201458 :                 i = i+1;</span>
+<span class="lineNum">     194 </span>            :         }
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span><span class="lineCov">  159783161 :         _insert_nonfull( x-&gt;C[i-1], _key );</span>
+<span class="lineNum">     197 </span>            :     
+<span class="lineNum">     198 </span>            :     }
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span><span class="lineCov">  193342713 : }</span>
+<a name="201"><span class="lineNum">     201 </span>            : </a>
+<span class="lineNum">     202 </span>            : BTreeNodeClass *
+<span class="lineNum">     203 </span><span class="lineCov">  140564321 : BTreeClass :: _pre_descend_child( BTreeNodeClass *parent, int idx, void *ptr )</span>
+<span class="lineNum">     204 </span>            : {
+<span class="lineNum">     205 </span><span class="lineCov">  140564321 :     BTreeNodeClass *child = NULL;</span>
+<span class="lineNum">     206 </span><span class="lineCov">  140564321 :     BTreeNodeClass *lsibling = NULL;</span>
+<span class="lineNum">     207 </span><span class="lineCov">  140564321 :     BTreeNodeClass *rsibling = NULL;</span>
+<span class="lineNum">     208 </span>            :     int parent_key, predecessor_key, successor_key;
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span><span class="lineCov">  140564321 :     int t = ((BTreeClass *)ptr)-&gt;t;</span>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span><span class="lineCov">  140564321 :     child = parent-&gt;C[idx]; </span>
+<span class="lineNum">     213 </span>            : 
+<span class="lineNum">     214 </span><span class="lineCov">  140564321 :     if( child-&gt;n&gt;t-1 ) // not a minimal node</span>
+<span class="lineNum">     215 </span><span class="lineCov">  111659921 :         return child;</span>
+<span class="lineNum">     216 </span>            :     
+<span class="lineNum">     217 </span><span class="lineCov">   28904400 :     if ( idx == parent-&gt;n ) {   </span>
+<span class="lineNum">     218 </span><span class="lineCov">    6229818 :         lsibling = parent-&gt;C[idx-1];</span>
+<span class="lineNum">     219 </span><span class="lineCov">    6229818 :         rsibling = NULL; </span>
+<span class="lineNum">     220 </span><span class="lineCov">   22674582 :     }else if ( idx == 0 ) {</span>
+<span class="lineNum">     221 </span><span class="lineCov">    7227274 :         lsibling = NULL;</span>
+<span class="lineNum">     222 </span><span class="lineCov">    7227274 :         rsibling = parent-&gt;C[1];</span>
+<span class="lineNum">     223 </span>            :     }else {
+<span class="lineNum">     224 </span><span class="lineCov">   15447308 :         lsibling = parent-&gt;C[idx - 1]; </span>
+<span class="lineNum">     225 </span><span class="lineCov">   15447308 :         rsibling = parent-&gt;C[idx + 1];</span>
+<span class="lineNum">     226 </span>            :     }
+<span class="lineNum">     227 </span>            :     
+<span class="lineNum">     228 </span><span class="lineCov">   28904400 :     if( lsibling &amp;&amp; lsibling-&gt;n &gt; t-1 ){ </span>
+<span class="lineNum">     229 </span><span class="lineCov">   13251480 :         assert(idx&gt;0);</span>
+<span class="lineNum">     230 </span>            : 
+<span class="lineNum">     231 </span><span class="lineCov">   13251480 :         parent_key = parent-&gt;keys[idx-1];</span>
+<span class="lineNum">     232 </span><span class="lineCov">   13251480 :         _move_key( parent_key, parent, child, 0, 1 ); //move 1-level down</span>
+<span class="lineNum">     233 </span><span class="lineCov">   13251480 :         predecessor_key = lsibling-&gt;keys[lsibling-&gt;n-1];</span>
+<span class="lineNum">     234 </span><span class="lineCov">   13251480 :         child-&gt;C[0] = lsibling-&gt;C[lsibling-&gt;n];</span>
+<span class="lineNum">     235 </span><span class="lineCov">   13251480 :         _move_key( predecessor_key, lsibling, parent, 0, 0 );</span>
+<span class="lineNum">     236 </span>            :     }
+<span class="lineNum">     237 </span><span class="lineCov">   15652920 :     else if( rsibling &amp;&amp; rsibling-&gt;n &gt; t-1 ){</span>
+<span class="lineNum">     238 </span><span class="lineCov">    8039063 :         parent_key = parent-&gt;keys[idx];</span>
+<span class="lineNum">     239 </span><span class="lineCov">    8039063 :         _move_key( parent_key, parent, child, 0, 1 );//move 1-level down</span>
+<span class="lineNum">     240 </span><span class="lineCov">    8039063 :         successor_key = rsibling-&gt;keys[0];</span>
+<span class="lineNum">     241 </span><span class="lineCov">    8039063 :         child-&gt;C[child-&gt;n] = rsibling-&gt;C[0];</span>
+<span class="lineNum">     242 </span><span class="lineCov">    8039063 :         _move_key( successor_key, rsibling, parent, 1, 0 );</span>
+<span class="lineNum">     243 </span>            :     }
+<span class="lineNum">     244 </span><span class="lineCov">    7613857 :     else if( lsibling &amp;&amp; (lsibling-&gt;n == t-1) ){</span>
+<span class="lineNum">     245 </span><span class="lineCov">    5198674 :         assert(idx&gt;0);</span>
+<span class="lineNum">     246 </span>            :         
+<span class="lineNum">     247 </span><span class="lineCov">    5198674 :         parent_key = parent-&gt;keys[idx-1];</span>
+<span class="lineNum">     248 </span><span class="lineCov">    5198674 :         _move_key( parent_key, parent, lsibling, 1, 0 );//move 1-level down</span>
+<span class="lineNum">     249 </span><span class="lineCov">    5198674 :         _merge_node( lsibling, child );</span>
+<span class="lineNum">     250 </span><span class="lineCov">    5198674 :         parent-&gt;C[idx-1] = lsibling;</span>
+<span class="lineNum">     251 </span>            :     
+<span class="lineNum">     252 </span><span class="lineCov">    5198674 :         child = lsibling;</span>
+<span class="lineNum">     253 </span>            :      }
+<span class="lineNum">     254 </span><span class="lineCov">    2415183 :     else if( rsibling &amp;&amp; (rsibling-&gt;n == t-1) ){</span>
+<span class="lineNum">     255 </span>            :         
+<span class="lineNum">     256 </span><span class="lineCov">    2415183 :         parent_key = parent-&gt;keys[idx];</span>
+<span class="lineNum">     257 </span><span class="lineCov">    2415183 :         _move_key( parent_key, parent, child, 1, 0 );//move 1-level down</span>
+<span class="lineNum">     258 </span><span class="lineCov">    2415183 :         _merge_node( child, rsibling );</span>
+<span class="lineNum">     259 </span><span class="lineCov">    2415183 :         parent-&gt;C[idx] = child;</span>
+<span class="lineNum">     260 </span>            :     }
+<span class="lineNum">     261 </span>            :     else
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :         assert(0);</span>
+<span class="lineNum">     263 </span>            : 
+<span class="lineNum">     264 </span><span class="lineCov">   28904400 :     return child;</span>
+<span class="lineNum">     265 </span>            : }
+<a name="266"><span class="lineNum">     266 </span>            : </a>
+<span class="lineNum">     267 </span>            : int 
+<span class="lineNum">     268 </span><span class="lineCov">   10266978 : BTreeClass :: _descend_pred( BTreeNodeClass *node, void *ptr )</span>
+<span class="lineNum">     269 </span>            : {
+<span class="lineNum">     270 </span>            :     int idx;
+<span class="lineNum">     271 </span>            :     int pred_key;
+<span class="lineNum">     272 </span>            : 
+<span class="lineNum">     273 </span><span class="lineCov">   10266978 :     BTreeNodeClass *child = NULL;</span>
+<span class="lineNum">     274 </span>            : 
+<span class="lineNum">     275 </span><span class="lineCov">   10266978 :     int t = ((BTreeClass *)ptr)-&gt;t;</span>
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span><span class="lineCov">   10266978 :     if( node-&gt;leaf ){</span>
+<span class="lineNum">     278 </span><span class="lineCov">    6849889 :         assert( node-&gt;n &gt;= t ); //at least t keys</span>
+<span class="lineNum">     279 </span><span class="lineCov">    6849889 :         idx = node-&gt;n-1;</span>
+<span class="lineNum">     280 </span><span class="lineCov">    6849889 :         pred_key = node-&gt;keys[idx];</span>
+<span class="lineNum">     281 </span><span class="lineCov">    6849889 :         _remove_from_leaf( node, idx );</span>
+<span class="lineNum">     282 </span>            :     }
+<span class="lineNum">     283 </span>            :     else{
+<span class="lineNum">     284 </span><span class="lineCov">    3417089 :         child = _pre_descend_child( node, node-&gt;n, ptr );        </span>
+<span class="lineNum">     285 </span><span class="lineCov">    3417089 :         pred_key = _descend_pred( child, ptr );</span>
+<span class="lineNum">     286 </span>            :     }
+<span class="lineNum">     287 </span>            : 
+<span class="lineNum">     288 </span><span class="lineCov">   10266978 :     return pred_key;</span>
+<span class="lineNum">     289 </span>            : }
+<a name="290"><span class="lineNum">     290 </span>            : </a>
+<span class="lineNum">     291 </span>            : int 
+<span class="lineNum">     292 </span><span class="lineCov">    3797126 : BTreeClass :: _descend_succ( BTreeNodeClass *node, void *ptr )</span>
+<span class="lineNum">     293 </span>            : {
+<span class="lineNum">     294 </span>            :     int idx;
+<span class="lineNum">     295 </span>            :     int succ_key;
+<span class="lineNum">     296 </span>            : 
+<span class="lineNum">     297 </span><span class="lineCov">    3797126 :     BTreeNodeClass *child = NULL;</span>
+<span class="lineNum">     298 </span>            : 
+<span class="lineNum">     299 </span><span class="lineCov">    3797126 :     int t = ((BTreeClass *)ptr)-&gt;t;</span>
+<span class="lineNum">     300 </span>            : 
+<span class="lineNum">     301 </span><span class="lineCov">    3797126 :     if( node-&gt;leaf ){</span>
+<span class="lineNum">     302 </span><span class="lineCov">    2812095 :         assert( node-&gt;n &gt;= t ); //at least t keys</span>
+<span class="lineNum">     303 </span><span class="lineCov">    2812095 :         idx = 0;</span>
+<span class="lineNum">     304 </span><span class="lineCov">    2812095 :         succ_key = node-&gt;keys[idx];</span>
+<span class="lineNum">     305 </span><span class="lineCov">    2812095 :         _remove_from_leaf( node, idx );</span>
+<span class="lineNum">     306 </span>            :     }
+<span class="lineNum">     307 </span>            :     else{
+<span class="lineNum">     308 </span><span class="lineCov">     985031 :         child = _pre_descend_child( node, 0, ptr );        </span>
+<span class="lineNum">     309 </span><span class="lineCov">     985031 :         succ_key = _descend_succ( child, ptr );</span>
+<span class="lineNum">     310 </span>            :     }
+<span class="lineNum">     311 </span>            : 
+<span class="lineNum">     312 </span><span class="lineCov">    3797126 :     return succ_key;</span>
+<span class="lineNum">     313 </span>            : }
+<span class="lineNum">     314 </span>            : 
+<span class="lineNum">     315 </span>            : /* Never descend into a minimal node
+<span class="lineNum">     316 </span>            :  *
+<a name="317"><span class="lineNum">     317 </span>            :  * */</a>
+<span class="lineNum">     318 </span>            : void
+<span class="lineNum">     319 </span><span class="lineCov">  172556053 : BTreeClass :: _descend( BTreeNodeClass *node, int key, void *ptr ){</span>
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span>            :     int idx;
+<span class="lineNum">     322 </span><span class="lineCov">  172556053 :     int t = ((BTreeClass *)ptr)-&gt;t;</span>
+<span class="lineNum">     323 </span><span class="lineCov">  172556053 :     BTreeNodeClass **r = &amp;((BTreeClass *)ptr)-&gt;root;</span>
+<span class="lineNum">     324 </span><span class="lineCov">  172556053 :     BTreeNodeClass *child = NULL;</span>
+<span class="lineNum">     325 </span>            :     
+<span class="lineNum">     326 </span><span class="lineCov">  172556053 :     assert( node );</span>
+<span class="lineNum">     327 </span>            : 
+<span class="lineNum">     328 </span><span class="lineCov">  172556053 :     idx = node-&gt;search_in_node( key );</span>
+<span class="lineNum">     329 </span>            :     
+<span class="lineNum">     330 </span><span class="lineCov">  172556053 :     if( idx&lt;node-&gt;n &amp;&amp; node-&gt;keys[idx]==key ){ //key found in the node</span>
+<span class="lineNum">     331 </span><span class="lineCov">   36393852 :         if( node-&gt;leaf ){</span>
+<span class="lineNum">     332 </span><span class="lineCov">   23897568 :             _remove_from_leaf( node, idx );</span>
+<span class="lineNum">     333 </span><span class="lineCov">   23897568 :             if( node-&gt;n==0 &amp;&amp; node==*r ){</span>
+<span class="lineNum">     334 </span><span class="lineCov">       8193 :                 delete *r;</span>
+<span class="lineNum">     335 </span><span class="lineCov">       8193 :                 *r=NULL;</span>
+<span class="lineNum">     336 </span>            :             }
+<span class="lineNum">     337 </span>            :         }
+<span class="lineNum">     338 </span>            :         else{
+<span class="lineNum">     339 </span><span class="lineCov">   12496284 :             _remove_from_non_leaf( node, idx, ptr );</span>
+<span class="lineNum">     340 </span>            :         }
+<span class="lineNum">     341 </span><span class="lineCov">   36393852 :         return;</span>
+<span class="lineNum">     342 </span>            :     }
+<span class="lineNum">     343 </span>            : 
+<span class="lineNum">     344 </span>            :     //key not found in the node
+<span class="lineNum">     345 </span><span class="lineCov">  136162201 :     if( node-&gt;leaf ){</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :         cout&lt;&lt;&quot; The key &quot;&lt;&lt;key&lt;&lt; &quot; does not exist in the tree\n&quot;;</span>
+<span class="lineNum">     347 </span><span class="lineNoCov">          0 :         return;</span>
+<span class="lineNum">     348 </span>            :     }
+<span class="lineNum">     349 </span>            : 
+<span class="lineNum">     350 </span><span class="lineCov">  136162201 :     child = _pre_descend_child( node, idx, ptr );</span>
+<span class="lineNum">     351 </span>            : 
+<span class="lineNum">     352 </span><span class="lineCov">  136162201 :     _descend( child, key, ptr );</span>
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span><span class="lineCov">  136162201 :     if( node-&gt;n==0 &amp;&amp; node==*r ){</span>
+<span class="lineNum">     355 </span><span class="lineCov">      40403 :         delete node;</span>
+<span class="lineNum">     356 </span><span class="lineCov">      40403 :         *r = child;</span>
+<span class="lineNum">     357 </span>            :     }
+<span class="lineNum">     358 </span>            : 
+<span class="lineNum">     359 </span><span class="lineCov">  136162201 :     return;</span>
+<span class="lineNum">     360 </span>            : }
+<span class="lineNum">     361 </span>            : /* Function: BTReeClass::_remove_from_leaf
+<span class="lineNum">     362 </span>            :  * Description: delete the idx-th key from the leaf node
+<span class="lineNum">     363 </span>            :  * Param @node : target node
+<span class="lineNum">     364 </span>            :  * Param @index: key index
+<span class="lineNum">     365 </span>            :  * return: void
+<a name="366"><span class="lineNum">     366 </span>            :  * */</a>
+<span class="lineNum">     367 </span>            : void
+<span class="lineNum">     368 </span><span class="lineCov">   33559552 : BTreeClass :: _remove_from_leaf( BTreeNodeClass *node, int idx )</span>
+<span class="lineNum">     369 </span>            : {
+<span class="lineNum">     370 </span><span class="lineCov">   33559552 :     int i = idx;</span>
+<span class="lineNum">     371 </span>            : 
+<span class="lineNum">     372 </span><span class="lineCov">   33559552 :     assert( node-&gt;leaf );</span>
+<span class="lineNum">     373 </span><span class="lineCov">   33559552 :     assert( idx&lt;node-&gt;n );</span>
+<span class="lineNum">     374 </span>            : 
+<span class="lineNum">     375 </span><span class="lineCov">  104733541 :     while( i&lt;node-&gt;n-1 ){</span>
+<span class="lineNum">     376 </span><span class="lineCov">   37614437 :         node-&gt;keys[i] = node-&gt;keys[i+1];</span>
+<span class="lineNum">     377 </span><span class="lineCov">   37614437 :         i++;</span>
+<span class="lineNum">     378 </span>            :     }
+<span class="lineNum">     379 </span>            : 
+<span class="lineNum">     380 </span><span class="lineCov">   33559552 :     node-&gt;n--;</span>
+<span class="lineNum">     381 </span>            : 
+<span class="lineNum">     382 </span><span class="lineCov">   33559552 :     return;</span>
+<span class="lineNum">     383 </span>            : }
+<a name="384"><span class="lineNum">     384 </span>            : </a>
+<span class="lineNum">     385 </span>            : void 
+<span class="lineNum">     386 </span><span class="lineCov">   12496284 : BTreeClass::_remove_from_non_leaf( BTreeNodeClass *node, int idx, void *ptr )</span>
+<span class="lineNum">     387 </span>            : {    
+<span class="lineNum">     388 </span>            :     int key, key_prime;
+<span class="lineNum">     389 </span>            : 
+<span class="lineNum">     390 </span>            :     BTreeNodeClass *pred_child, *succ_child;
+<span class="lineNum">     391 </span>            :     BTreeNodeClass *left, *right;
+<span class="lineNum">     392 </span><span class="lineCov">   12496284 :     int t = ((BTreeClass *)ptr)-&gt;t;</span>
+<span class="lineNum">     393 </span><span class="lineCov">   12496284 :     BTreeNodeClass **r = &amp;((BTreeClass *)ptr)-&gt;root;</span>
+<span class="lineNum">     394 </span>            :     
+<span class="lineNum">     395 </span><span class="lineCov">   12496284 :     pred_child = node-&gt;C[idx];</span>
+<span class="lineNum">     396 </span><span class="lineCov">   12496284 :     succ_child = node-&gt;C[idx+1];</span>
+<span class="lineNum">     397 </span>            : 
+<span class="lineNum">     398 </span><span class="lineCov">   12496284 :     key = node-&gt;keys[idx];</span>
+<span class="lineNum">     399 </span>            : 
+<span class="lineNum">     400 </span><span class="lineCov">   12496284 :     if( pred_child-&gt;n &gt; t-1 )</span>
+<span class="lineNum">     401 </span><span class="lineCov">    6849889 :        node-&gt;keys[idx]= _descend_pred( pred_child, ptr );</span>
+<span class="lineNum">     402 </span><span class="lineCov">    5646395 :     else if( succ_child-&gt;n &gt; t-1 )</span>
+<span class="lineNum">     403 </span><span class="lineCov">    2812095 :        node-&gt;keys[idx]= _descend_succ( succ_child, ptr );</span>
+<span class="lineNum">     404 </span>            :     else{ 
+<span class="lineNum">     405 </span><span class="lineCov">    2834300 :        key = node-&gt;keys[idx];</span>
+<span class="lineNum">     406 </span><span class="lineCov">    2834300 :        left = node-&gt;C[idx];</span>
+<span class="lineNum">     407 </span><span class="lineCov">    2834300 :        right = node-&gt;C[idx+1];</span>
+<span class="lineNum">     408 </span><span class="lineCov">    2834300 :        _move_key( key, node, left, 1, 0 ); //move 1-level down</span>
+<span class="lineNum">     409 </span><span class="lineCov">    2834300 :        _merge_node( left, right );</span>
+<span class="lineNum">     410 </span><span class="lineCov">    2834300 :        node-&gt;C[idx] = left;</span>
+<span class="lineNum">     411 </span><span class="lineCov">    2834300 :        _descend( left, key, ptr );</span>
+<span class="lineNum">     412 </span>            :     }
+<span class="lineNum">     413 </span>            : 
+<span class="lineNum">     414 </span><span class="lineCov">   12496284 :     if( node-&gt;n==0 &amp;&amp; node==*r ){</span>
+<span class="lineNum">     415 </span><span class="lineCov">       2105 :         *r = left;</span>
+<span class="lineNum">     416 </span><span class="lineCov">       2105 :         delete node;</span>
+<span class="lineNum">     417 </span>            :     }
+<span class="lineNum">     418 </span>            : 
+<span class="lineNum">     419 </span><span class="lineCov">   12496284 :     return;   </span>
+<span class="lineNum">     420 </span>            : }
+<span class="lineNum">     421 </span>            : 
+<span class="lineNum">     422 </span>            : /**
+<span class="lineNum">     423 </span>            :  ** Function used dest move a key src one node dest the other
+<span class="lineNum">     424 </span>            :  ** @param x : pointer of the node
+<span class="lineNum">     425 </span>            :  ** @param index : index of corresponding key separating the two children
+<span class="lineNum">     426 </span>            :  ** @return void
+<span class="lineNum">     427 </span>            :  **/
+<a name="428"><span class="lineNum">     428 </span>            : </a>
+<span class="lineNum">     429 </span>            : void 
+<span class="lineNum">     430 </span><span class="lineCov">   53029243 : BTreeClass::_move_key( int key, BTreeNodeClass *src, BTreeNodeClass *dest, int src_ptr_shift, int dest_ptr_shift ){</span>
+<span class="lineNum">     431 </span>            : 
+<span class="lineNum">     432 </span><span class="lineCov">   53029243 :     int src_pos = 0;</span>
+<span class="lineNum">     433 </span><span class="lineCov">   53029243 :     int dest_pos = 0;</span>
+<span class="lineNum">     434 </span>            : 
+<span class="lineNum">     435 </span><span class="lineCov">  167720416 :     while( src_pos&lt;src-&gt;n &amp;&amp; key&gt;src-&gt;keys[src_pos] )</span>
+<span class="lineNum">     436 </span><span class="lineCov">   61661930 :         src_pos++;</span>
+<span class="lineNum">     437 </span>            : 
+<span class="lineNum">     438 </span><span class="lineCov">  161698512 :     while( dest_pos&lt;dest-&gt;n &amp;&amp; key&gt;dest-&gt;keys[dest_pos] )</span>
+<span class="lineNum">     439 </span><span class="lineCov">   55640026 :         dest_pos++;</span>
+<span class="lineNum">     440 </span>            : 
+<span class="lineNum">     441 </span><span class="lineCov">   53029243 :     _node_key_shift_right( dest, dest_pos, dest_ptr_shift );</span>
+<span class="lineNum">     442 </span>            : 
+<span class="lineNum">     443 </span><span class="lineCov">   53029243 :     dest-&gt;keys[ dest_pos ] = src-&gt;keys[src_pos]; </span>
+<span class="lineNum">     444 </span>            : 
+<span class="lineNum">     445 </span><span class="lineCov">   53029243 :     _node_key_shift_left( src, src_pos, src_ptr_shift );</span>
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span>            :     //DISK_WRITE(src);
+<span class="lineNum">     448 </span>            :     //DISK_WRITE(dest);
+<span class="lineNum">     449 </span><span class="lineCov">   53029243 : }</span>
+<span class="lineNum">     450 </span>            : 
+<span class="lineNum">     451 </span>            : /**
+<span class="lineNum">     452 </span>            :  ** Function used dest merge sibling nodes
+<span class="lineNum">     453 </span>            :  ** @param left : left sibling node
+<span class="lineNum">     454 </span>            :  ** @param right : right sibling node
+<span class="lineNum">     455 </span>            :  ** @param free_left: 1: keys merged to the right node and free up the left; 0: otherwise
+<span class="lineNum">     456 </span>            :  ** @return void
+<span class="lineNum">     457 </span>            :  **/
+<a name="458"><span class="lineNum">     458 </span>            : </a>
+<span class="lineNum">     459 </span>            : void 
+<span class="lineNum">     460 </span><span class="lineCov">   10448157 : BTreeClass::_merge_node( BTreeNodeClass *left, BTreeNodeClass *right ){</span>
+<span class="lineNum">     461 </span>            : 
+<span class="lineNum">     462 </span>            :     int k;
+<span class="lineNum">     463 </span>            : 
+<span class="lineNum">     464 </span><span class="lineCov">   31344471 :     for( k=0; k&lt;right-&gt;n; k++ ){</span>
+<span class="lineNum">     465 </span><span class="lineCov">   20896314 :         left-&gt;keys[left-&gt;n+k] = right-&gt;keys[k];</span>
+<span class="lineNum">     466 </span><span class="lineCov">   20896314 :         left-&gt;C[left-&gt;n+k] = right-&gt;C[k];</span>
+<span class="lineNum">     467 </span>            :     }
+<span class="lineNum">     468 </span>            :     
+<span class="lineNum">     469 </span><span class="lineCov">   10448157 :     left-&gt;n += right-&gt;n;</span>
+<span class="lineNum">     470 </span>            : 
+<span class="lineNum">     471 </span><span class="lineCov">   10448157 :     left-&gt;C[left-&gt;n] = right-&gt;C[right-&gt;n];</span>
+<span class="lineNum">     472 </span>            :     
+<span class="lineNum">     473 </span><span class="lineCov">   10448157 :     delete right;</span>
+<span class="lineNum">     474 </span>            : 
+<span class="lineNum">     475 </span>            :     //DISK_WRITE(left);
+<span class="lineNum">     476 </span>            :     //DISK_WRITE(right);
+<span class="lineNum">     477 </span><span class="lineCov">   10448157 : }</span>
+<a name="478"><span class="lineNum">     478 </span>            : </a>
+<span class="lineNum">     479 </span>            : void 
+<span class="lineNum">     480 </span><span class="lineCov">   53029243 : BTreeClass::_node_key_shift_left( BTreeNodeClass *x, int index, int ptr_shift){</span>
+<span class="lineNum">     481 </span>            :     
+<span class="lineNum">     482 </span>            :     int idx;
+<span class="lineNum">     483 </span>            : 
+<span class="lineNum">     484 </span><span class="lineCov">  114699743 :     for( idx=index; idx&lt;x-&gt;n-1; idx++ ){</span>
+<span class="lineNum">     485 </span><span class="lineCov">   61670500 :         x-&gt;keys[idx] = x-&gt;keys[idx+1];</span>
+<span class="lineNum">     486 </span><span class="lineCov">   61670500 :         if( ptr_shift )</span>
+<span class="lineNum">     487 </span><span class="lineCov">   31855965 :             x-&gt;C[idx]=x-&gt;C[idx+1];</span>
+<span class="lineNum">     488 </span>            :     }
+<span class="lineNum">     489 </span>            : 
+<span class="lineNum">     490 </span><span class="lineCov">   53029243 :     if( ptr_shift )</span>
+<span class="lineNum">     491 </span><span class="lineCov">   18487220 :         x-&gt;C[x-&gt;n-1]=x-&gt;C[x-&gt;n];</span>
+<span class="lineNum">     492 </span><span class="lineCov">   53029243 :     x-&gt;n--;</span>
+<span class="lineNum">     493 </span><span class="lineCov">   53029243 : }</span>
+<span class="lineNum">     494 </span>            : 
+<span class="lineNum">     495 </span>            : /* Function: BTReeClass::_node_key_shift_right
+<span class="lineNum">     496 </span>            :  * Description: shift keys starting src an index dest right in a BTree node
+<span class="lineNum">     497 </span>            :  * Param @x : node
+<span class="lineNum">     498 </span>            :  * Param @index: starting index
+<span class="lineNum">     499 </span>            :  * return: void
+<a name="500"><span class="lineNum">     500 </span>            :  * */</a>
+<span class="lineNum">     501 </span>            : void 
+<span class="lineNum">     502 </span><span class="lineCov">   53029243 : BTreeClass::_node_key_shift_right( BTreeNodeClass *x, int index, int ptr_shift ){</span>
+<span class="lineNum">     503 </span>            :     
+<span class="lineNum">     504 </span>            :     int idx;
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span><span class="lineCov">   53029243 :     assert( index&lt;=x-&gt;n );</span>
+<span class="lineNum">     507 </span>            : 
+<span class="lineNum">     508 </span><span class="lineCov">  109346738 :     for( idx=x-&gt;n; idx&gt;index; idx-- ){</span>
+<span class="lineNum">     509 </span><span class="lineCov">   56317495 :         x-&gt;keys[idx] = x-&gt;keys[idx-1];</span>
+<span class="lineNum">     510 </span><span class="lineCov">   56317495 :         if( ptr_shift )</span>
+<span class="lineNum">     511 </span><span class="lineCov">   26502960 :             x-&gt;C[idx+1]=x-&gt;C[idx]; </span>
+<span class="lineNum">     512 </span>            :     }
+<span class="lineNum">     513 </span>            : 
+<span class="lineNum">     514 </span><span class="lineCov">   53029243 :     x-&gt;keys[index] = INVALID_KEY;</span>
+<span class="lineNum">     515 </span>            : 
+<span class="lineNum">     516 </span><span class="lineCov">   53029243 :     if( ptr_shift )</span>
+<span class="lineNum">     517 </span><span class="lineCov">   21290543 :         x-&gt;C[idx+1]=x-&gt;C[idx]; </span>
+<span class="lineNum">     518 </span>            : 
+<span class="lineNum">     519 </span><span class="lineCov">   53029243 :     x-&gt;n++;</span>
+<span class="lineNum">     520 </span><span class="lineCov">   53029243 : }</span>
+<span class="lineNum">     521 </span>            : 
+<a name="522"><span class="lineNum">     522 </span>            : // find the minimum key in a subtree whose root is r</a>
+<span class="lineNum">     523 </span>            : int
+<span class="lineNum">     524 </span><span class="lineCov">       8193 : BTreeClass::_minimum( BTreeNodeClass *r )</span>
+<span class="lineNum">     525 </span>            : {
+<span class="lineNum">     526 </span><span class="lineCov">       8193 :     BTreeNodeClass *x = r;</span>
+<span class="lineNum">     527 </span>            : 
+<span class="lineNum">     528 </span><span class="lineCov">      58894 :     while( !x-&gt;leaf )</span>
+<span class="lineNum">     529 </span><span class="lineCov">      42508 :         x = x-&gt;C[0];</span>
+<span class="lineNum">     530 </span>            : 
+<span class="lineNum">     531 </span><span class="lineCov">       8193 :     return x-&gt;keys[0];</span>
+<span class="lineNum">     532 </span>            : 
+<span class="lineNum">     533 </span>            : }
+<a name="534"><span class="lineNum">     534 </span>            : </a>
+<span class="lineNum">     535 </span>            : int
+<span class="lineNum">     536 </span><span class="lineCov">       8193 : BTreeClass::_maximum( BTreeNodeClass *r )</span>
+<span class="lineNum">     537 </span>            : {
+<span class="lineNum">     538 </span><span class="lineCov">       8193 :     BTreeNodeClass *x = r;</span>
+<span class="lineNum">     539 </span>            : 
+<span class="lineNum">     540 </span><span class="lineCov">      58894 :     while( !x-&gt;leaf )</span>
+<span class="lineNum">     541 </span><span class="lineCov">      42508 :         x = x-&gt;C[x-&gt;n];</span>
+<span class="lineNum">     542 </span>            : 
+<a name="543"><span class="lineNum">     543 </span><span class="lineCov">       8193 :     return x-&gt;keys[x-&gt;n-1];</span></a>
+<span class="lineNum">     544 </span>            : 
+<span class="lineNum">     545 </span><span class="lineCov">          3 : }</span>
+<span class="lineNum">     546 </span>            : /* backup code
+<span class="lineNum">     547 </span>            : // find the predecessor of key {x,i}
+<span class="lineNum">     548 </span>            : BTreeNodeClass *
+<span class="lineNum">     549 </span>            : BTreeClass :: _predecessor( BTreeNodeClass *node, int key_pos )
+<span class="lineNum">     550 </span>            : {
+<span class="lineNum">     551 </span>            :     BTreeNodeClass *pred = NULL;
+<span class="lineNum">     552 </span>            : 
+<span class="lineNum">     553 </span>            :     if( !node )
+<span class="lineNum">     554 </span>            :         return pred;
+<span class="lineNum">     555 </span>            : 
+<span class="lineNum">     556 </span>            :     if( node-&gt;leaf )
+<span class="lineNum">     557 </span>            :         return pred;
+<span class="lineNum">     558 </span>            : 
+<span class="lineNum">     559 </span>            :     pred = node-&gt;C[key_pos];
+<span class="lineNum">     560 </span>            : 
+<span class="lineNum">     561 </span>            :     while( !pred-&gt;leaf )
+<span class="lineNum">     562 </span>            :         pred = pred-&gt;C[pred-&gt;n];
+<span class="lineNum">     563 </span>            : 
+<span class="lineNum">     564 </span>            :     return pred;
+<span class="lineNum">     565 </span>            : }
+<span class="lineNum">     566 </span>            : 
+<span class="lineNum">     567 </span>            : BTreeNodeClass *
+<span class="lineNum">     568 </span>            : BTreeClass :: _successor( BTreeNodeClass *node, int key_pos )
+<span class="lineNum">     569 </span>            : {
+<span class="lineNum">     570 </span>            :     BTreeNodeClass *succ = NULL;
+<span class="lineNum">     571 </span>            : 
+<span class="lineNum">     572 </span>            :     if( !node )
+<span class="lineNum">     573 </span>            :         return succ;
+<span class="lineNum">     574 </span>            : 
+<span class="lineNum">     575 </span>            :     if( node-&gt;leaf )
+<span class="lineNum">     576 </span>            :         return succ;
+<span class="lineNum">     577 </span>            : 
+<span class="lineNum">     578 </span>            :     succ = node-&gt;C[key_pos+1];
+<span class="lineNum">     579 </span>            : 
+<span class="lineNum">     580 </span>            :     while( !succ-&gt;leaf )
+<span class="lineNum">     581 </span>            :         succ = succ-&gt;C[0];
+<span class="lineNum">     582 </span>            : 
+<span class="lineNum">     583 </span>            :     return succ;
+<span class="lineNum">     584 </span>            : }
+<span class="lineNum">     585 </span>            : 
+<span class="lineNum">     586 </span>            : end of backup code */
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.11</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
