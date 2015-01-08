@@ -61,19 +61,19 @@ private:
     static BTreeObjectClass _search_subtree( BTreeNodeClass *r, int key );
     static BTreeNodeClass * _pre_descend_child( BTreeNodeClass *parent, int idx, void *ptr );
     static void _descend( BTreeNodeClass *r, int key, void *ptr );
-    static int  _descend_pred( BTreeNodeClass *node, void *ptr );
-    static int  _descend_succ( BTreeNodeClass *node, void *ptr );
+    static int  _descend_right( BTreeNodeClass *node, void *ptr );
+    static int  _descend_left( BTreeNodeClass *node, void *ptr );
     static void  _remove_from_leaf( BTreeNodeClass *node, int idx );
     static void  _remove_from_non_leaf( BTreeNodeClass *node, int idx, void *ptr );
     static void _move_key( int key, BTreeNodeClass *src, BTreeNodeClass *dest, int src_ptr_shift, int dest_ptr_shift );
     static void _merge_node( BTreeNodeClass *x, BTreeNodeClass *y);
     static void _node_key_shift_left( BTreeNodeClass *x, int index, int ptr_shift);
     static void _node_key_shift_right( BTreeNodeClass *x, int index, int ptr_shift );
-    static void _node_pointer_shift_right( BTreeNodeClass *x, int index );
     static int _minimum( BTreeNodeClass *r );
     static int _maximum( BTreeNodeClass *r );
-    static BTreeNodeClass * _predecessor( BTreeNodeClass *node, int key );
-    static BTreeNodeClass * _successor( BTreeNodeClass *node, int key );
+
+    //static BTreeNodeClass * _predecessor( BTreeNodeClass *node, int key );
+    //static BTreeNodeClass * _successor( BTreeNodeClass *node, int key );
 };
 
 #endif

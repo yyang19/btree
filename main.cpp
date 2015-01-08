@@ -174,7 +174,6 @@ tc_1( BTreeClass *bt ){
     
     reset_array( &keys[0], TC_1_TRIAL );
 
-out:
     if( result != 0 )
         cout<<__func__<<" fails"<<endl;
 
@@ -195,37 +194,7 @@ int main(void){
 
     if( result!=0 )
         cout<<"Unit test fails"<<endl;
-/*
- *  
- *  
-    BTreeObjectClass *obj = new BTreeObjectClass();
-    //insert_1(); 
-    insert_2(bt);
-
-    *obj = bt->search( 6808 );
-
-    if( obj->read_node() ){
-        cout<<"Record "<<obj->read_key()<<" found!\n";    
-    }
-    else
-        cout<<" Record not found "<<endl;
-
-    cout<< "Height: "<<bt->height()<< endl;    
-    cout<< "Min: "<<bt->min_key()<< endl;    
-    cout<< "Max: "<<bt->max_key()<< endl;    
-
-    Test of predecessor and resultor functions
     
-    for( key=1; key<=8192; key++ ){
-        bt->test( key, (void *)obj );
-        if( obj->read_node() ){
-            cout<<"Predecessor of key "<<key<<" is "<< obj->read_key()<<" found!\n";    
-        }
-        else
-            cout<<"Predecessor of key "<<key<<" not found "<<endl;
-    }
-    delete obj;
-*/
     delete bt;
 
 }

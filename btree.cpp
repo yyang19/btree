@@ -89,6 +89,7 @@ BTreeClass::height()
 
     return h;
 }
+
 void BTreeClass::insert( int key )
 {
     BTreeNodeClass *r;
@@ -133,43 +134,40 @@ BTreeClass :: remove( int key )
 }
 
 BTreeObjectClass
-BTreeClass::_search_subtree( BTreeNodeClass *x, int key )
+BTreeClass::_search_subtree( BTreeNodeClass *node, int key )
 {
     int i=0;
     BTreeObjectClass obj;
 
-    while( i<x->n && key > x->keys[i] )
+    while( i<node->n && key > node->keys[i] )
         i++;
 
-    if( i<x->n && key == x->keys[i] ){
-        obj.node = x;
+    if( i<node->n && key == node->keys[i] ){
+        obj.node = node;
         obj.index = i;
     }
-    else if( x->leaf ){
+    else if( node->leaf ){
         obj.node = NULL;
         obj.index = 0;
     }
     else{
-        //DISK_READ(x->C[i]    
-        obj = _search_subtree( x->C[i], key );
+        //DISK_READ(node->C[i]) 
+        obj = _search_subtree( node->C[i], key );
     }
 
     return obj;
 }
 
-/*
- * move the middle key in of the i-th child of x up, and split the rest keys into 2 nodes
- * */
 void 
-BTreeClass::_split_child( BTreeNodeClass *x, int i ){
+BTreeClass::_split_child( BTreeNodeClass *node, int i ){
     
     int j;
-    int t = x->t;
+    int t = node->t;
 
     BTreeNodeClass *y;
     BTreeNodeClass *z = new BTreeNodeClass(t);
 
-    y = x->C[i];
+    y = node->C[i];
     z->leaf = y->leaf;
     z->n = t-1;
 
@@ -184,55 +182,62 @@ BTreeClass::_split_child( BTreeNodeClass *x, int i ){
 
     y->n = t-1;
 
-    //shift child pointers in x dest the right dest create a roon for z
-    for( j=x->n+1; j>i; j-- )
-        x->C[j] = x->C[j-1];
+    //shift child pointers in node dest the right dest create a roon for z
+    for( j=node->n+1; j>i; j-- )
+        node->C[j] = node->C[j-1];
     
-    x->C[i+1] = z;
+    node->C[i+1] = z;
 
-    for( j=x->n; j>i; j-- )
-        x->keys[j] = x->keys[j-1];
+    for( j=node->n; j>i; j-- )
+        node->keys[j] = node->keys[j-1];
 
-    x->keys[i] = y->keys[t-1];
-    x->n ++;
+    node->keys[i] = y->keys[t-1];
+    node->n ++;
 
     //DISK_WRITE(y);
     //DISK_WRITE(z);
-    //DISK_WRITE(x);
+    //DISK_WRITE(node);
 }
 
 void
-BTreeClass :: _insert_nonfull( BTreeNodeClass *x, int _key )
+BTreeClass :: _insert_nonfull( BTreeNodeClass *node, int _key )
 {
-    int i = x->n;
-    int t = x->t;
+    int i = node->n;
+    int t = node->t;
 
-    if( x->leaf ){
-        while( i>=1 && _key<x->keys[i-1] ){
-            x->keys[i] = x->keys[i-1];
+    if( node->leaf ){
+        while( i>=1 && _key<node->keys[i-1] ){
+            node->keys[i] = node->keys[i-1];
             i--;
         }
-        x->keys[i] = _key;
-        x->n++;
+        node->keys[i] = _key;
+        node->n++;
         // DISK-WRITE(x);
     }
     else{
-        while( i>=1 && _key<x->keys[i-1] )
+        while( i>=1 && _key<node->keys[i-1] )
             i--;
         i = i + 1;
-        // DISK-READ(x.C[i]);
-        if( x->C[i-1]->n == 2*t-1 ){
-            _split_child( x, i-1 );
-            if( _key>x->keys[i-1])
+        // DISK-READ(node.C[i]);
+        if( node->C[i-1]->n == 2*t-1 ){
+            _split_child( node, i-1 );
+            if( _key>node->keys[i-1])
                 i = i+1;
         }
 
-        _insert_nonfull( x->C[i-1], _key );
+        _insert_nonfull( node->C[i-1], _key );
     
     }
 
 }
 
+/* Function : BTreeClass::_pre_descend_child
+ * Description : pre-process a minimal child node before descend into it. `
+ * PARAM @parent : parent node
+ * PARAM @idx : child pointer position in the parent node
+ * PARAM @ptr : a pointer carrying tree scalars
+ * return : child pointer
+ */
 BTreeNodeClass *
 BTreeClass :: _pre_descend_child( BTreeNodeClass *parent, int idx, void *ptr )
 {
@@ -298,8 +303,15 @@ BTreeClass :: _pre_descend_child( BTreeNodeClass *parent, int idx, void *ptr )
     return child;
 }
 
+/* Function : BTreeClass::_descend_right
+ * Description : recursion to delete the right-most key in a subtree
+ * PARAM @node : root of the subtree
+ * PARAM @ptr : a pointer carrying tree scalars
+ * return : deleted key value
+ */
+
 int 
-BTreeClass :: _descend_pred( BTreeNodeClass *node, void *ptr )
+BTreeClass :: _descend_right( BTreeNodeClass *node, void *ptr )
 {
     int idx;
     int pred_key;
@@ -316,14 +328,20 @@ BTreeClass :: _descend_pred( BTreeNodeClass *node, void *ptr )
     }
     else{
         child = _pre_descend_child( node, node->n, ptr );        
-        pred_key = _descend_pred( child, ptr );
+        pred_key = _descend_right( child, ptr );
     }
 
     return pred_key;
 }
 
+/* Function : BTreeClass::_descend_left
+ * Description : recursion to delete the left-most key in a subtree
+ * PARAM @node : root of the subtree
+ * PARAM @ptr : a pointer carrying tree scalars
+ * return : deleted key value
+ */
 int 
-BTreeClass :: _descend_succ( BTreeNodeClass *node, void *ptr )
+BTreeClass :: _descend_left( BTreeNodeClass *node, void *ptr )
 {
     int idx;
     int succ_key;
@@ -340,20 +358,23 @@ BTreeClass :: _descend_succ( BTreeNodeClass *node, void *ptr )
     }
     else{
         child = _pre_descend_child( node, 0, ptr );        
-        succ_key = _descend_succ( child, ptr );
+        succ_key = _descend_left( child, ptr );
     }
 
     return succ_key;
 }
 
-/* Never descend into a minimal node
- *
+/* Function : BTreeClass::_descend 
+ * Description : The deletion procedure is designed to guarantee one downward pass through the tree. 
+ *               Therefore, this function is ensured that we never descend into a minimal node. 
+ * PARAM @node : current node
+ * PARAM @key  : key to delete
+ * PARAM @ptr : a pointer carrying tree scalars
  * */
 void
 BTreeClass :: _descend( BTreeNodeClass *node, int key, void *ptr ){
 
     int idx;
-    int t = ((BTreeClass *)ptr)->t;
     BTreeNodeClass **r = &((BTreeClass *)ptr)->root;
     BTreeNodeClass *child = NULL;
     
@@ -369,9 +390,9 @@ BTreeClass :: _descend( BTreeNodeClass *node, int key, void *ptr ){
                 *r=NULL;
             }
         }
-        else{
+        else
             _remove_from_non_leaf( node, idx, ptr );
-        }
+        
         return;
     }
 
@@ -395,7 +416,7 @@ BTreeClass :: _descend( BTreeNodeClass *node, int key, void *ptr ){
 /* Function: BTReeClass::_remove_from_leaf
  * Description: delete the idx-th key from the leaf node
  * Param @node : target node
- * Param @index: key index
+ * Param @index: key idx
  * return: void
  * */
 void
@@ -416,49 +437,53 @@ BTreeClass :: _remove_from_leaf( BTreeNodeClass *node, int idx )
     return;
 }
 
+/* Function: BTReeClass::_remove_from_non_leaf
+ * Description: delete the idx-th key from a non-leaf node
+ * Param @node : target node
+ * Param @index: key idx
+ * PARAM @ptr : a pointer carrying tree scalars
+ * return: void
+ * */
 void 
 BTreeClass::_remove_from_non_leaf( BTreeNodeClass *node, int idx, void *ptr )
 {    
-    int key, key_prime;
+    int key;
+    int t = ((BTreeClass *)ptr)->t;
 
     BTreeNodeClass *pred_child, *succ_child;
-    BTreeNodeClass *left, *right;
-    int t = ((BTreeClass *)ptr)->t;
     BTreeNodeClass **r = &((BTreeClass *)ptr)->root;
     
     pred_child = node->C[idx];
     succ_child = node->C[idx+1];
 
-    key = node->keys[idx];
-
     if( pred_child->n > t-1 )
-       node->keys[idx]= _descend_pred( pred_child, ptr );
+       node->keys[idx]= _descend_right( pred_child, ptr );
     else if( succ_child->n > t-1 )
-       node->keys[idx]= _descend_succ( succ_child, ptr );
+       node->keys[idx]= _descend_left( succ_child, ptr );
     else{ 
        key = node->keys[idx];
-       left = node->C[idx];
-       right = node->C[idx+1];
-       _move_key( key, node, left, 1, 0 ); //move 1-level down
-       _merge_node( left, right );
-       node->C[idx] = left;
-       _descend( left, key, ptr );
+       _move_key( key, node, pred_child, 1, 0 ); //move 1-level down
+       _merge_node( pred_child, succ_child );
+       node->C[idx] = pred_child;
+       _descend( pred_child, key, ptr );
     }
 
     if( node->n==0 && node==*r ){
-        *r = left;
+        *r = pred_child;
         delete node;
     }
 
     return;   
 }
 
-/**
- ** Function used dest move a key src one node dest the other
- ** @param x : pointer of the node
- ** @param index : index of corresponding key separating the two children
- ** @return void
- **/
+/*
+ * Function used dest move a key src one node dest the other
+ * @param node : pointer of the node
+ * @param index : index of corresponding key separating the two children
+ * @param src_ptr_shift : indicating if children pointers are shifted in the source node
+ * @param dest_ptr_shift : indicating if children pointers are shifted in the destination node
+ * @return void
+ */
 
 void 
 BTreeClass::_move_key( int key, BTreeNodeClass *src, BTreeNodeClass *dest, int src_ptr_shift, int dest_ptr_shift ){
@@ -482,13 +507,13 @@ BTreeClass::_move_key( int key, BTreeNodeClass *src, BTreeNodeClass *dest, int s
     //DISK_WRITE(dest);
 }
 
-/**
- ** Function used dest merge sibling nodes
- ** @param left : left sibling node
- ** @param right : right sibling node
- ** @param free_left: 1: keys merged to the right node and free up the left; 0: otherwise
- ** @return void
- **/
+/*
+ * Function: BTreeClass::_merge_node
+ * Description : merge sibling nodes. The right sibling node is freed up after merging.
+ * @param left : left sibling node
+ * @param right : right sibling node
+ * @return void
+ */
 
 void 
 BTreeClass::_merge_node( BTreeNodeClass *left, BTreeNodeClass *right ){
@@ -510,75 +535,93 @@ BTreeClass::_merge_node( BTreeNodeClass *left, BTreeNodeClass *right ){
     //DISK_WRITE(right);
 }
 
-void 
-BTreeClass::_node_key_shift_left( BTreeNodeClass *x, int index, int ptr_shift){
-    
-    int idx;
-
-    for( idx=index; idx<x->n-1; idx++ ){
-        x->keys[idx] = x->keys[idx+1];
-        if( ptr_shift )
-            x->C[idx]=x->C[idx+1];
-    }
-
-    if( ptr_shift )
-        x->C[x->n-1]=x->C[x->n];
-    x->n--;
-}
-
-/* Function: BTReeClass::_node_key_shift_right
- * Description: shift keys starting src an index dest right in a BTree node
- * Param @x : node
+/* Function: BTReeClass::_node_key_shift_left
+ * Description: left shift keys in a node
+ * Param @node : node
  * Param @index: starting index
+ * Param @ptr_shift : indicate if node pointers are shifted 
  * return: void
  * */
 void 
-BTreeClass::_node_key_shift_right( BTreeNodeClass *x, int index, int ptr_shift ){
+BTreeClass::_node_key_shift_left( BTreeNodeClass *node, int index, int ptr_shift){
     
     int idx;
 
-    assert( index<=x->n );
-
-    for( idx=x->n; idx>index; idx-- ){
-        x->keys[idx] = x->keys[idx-1];
+    for( idx=index; idx<node->n-1; idx++ ){
+        node->keys[idx] = node->keys[idx+1];
         if( ptr_shift )
-            x->C[idx+1]=x->C[idx]; 
+            node->C[idx]=node->C[idx+1];
     }
 
-    x->keys[index] = INVALID_KEY;
-
     if( ptr_shift )
-        x->C[idx+1]=x->C[idx]; 
-
-    x->n++;
+        node->C[node->n-1]=node->C[node->n];
+    node->n--;
 }
 
-// find the minimum key in a subtree whose root is r
+/* Function: BTReeClass::_node_key_shift_right
+ * Description: right shift keys in a node
+ * Param @node : node
+ * Param @index: starting index
+ * Param @ptr_shift : indicate if node pointers are shifted 
+ * return: void
+ * */
+void 
+BTreeClass::_node_key_shift_right( BTreeNodeClass *node, int index, int ptr_shift ){
+    
+    int idx;
+
+    assert( index<=node->n );
+
+    for( idx=node->n; idx>index; idx-- ){
+        node->keys[idx] = node->keys[idx-1];
+        if( ptr_shift )
+            node->C[idx+1]=node->C[idx]; 
+    }
+
+    node->keys[index] = INVALID_KEY;
+
+    if( ptr_shift )
+        node->C[idx+1]=node->C[idx]; 
+
+    node->n++;
+}
+
+/* Function: BTreeClass::_minimum
+ * Description: Find the minimum key value in a given subtree
+ * Param @r: root of subtree
+ * return: minimum key in subtree
+ * */
 int
 BTreeClass::_minimum( BTreeNodeClass *r )
 {
-    BTreeNodeClass *x = r;
+    BTreeNodeClass *node = r;
 
-    while( !x->leaf )
-        x = x->C[0];
+    while( !node->leaf )
+        node = node->C[0];
 
-    return x->keys[0];
+    return node->keys[0];
 
 }
 
+/* Function: BTreeClass::_maximum
+ * Description: Find the maximum key value in a given subtree
+ * Param @r: root of subtree
+ * return: maximum key in subtree
+ * */
 int
 BTreeClass::_maximum( BTreeNodeClass *r )
 {
-    BTreeNodeClass *x = r;
+    BTreeNodeClass *node = r;
 
-    while( !x->leaf )
-        x = x->C[x->n];
+    while( !node->leaf )
+        node = node->C[node->n];
 
-    return x->keys[x->n-1];
+    return node->keys[node->n-1];
 
 }
+
 /* backup code
-// find the predecessor of key {x,i}
+// find the predecessor of key {node,i}
 BTreeNodeClass *
 BTreeClass :: _predecessor( BTreeNodeClass *node, int key_pos )
 {

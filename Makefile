@@ -4,7 +4,7 @@ RM=rm -rf
 CPP_FILES := $(wildcard *.cpp)
 OBJS := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
 
-CPPFLAGS=-g -O0 --coverage #-Wall
+CPPFLAGS=-g -O0 --coverage -Wall
 LDFLAGS=-g -O0 --coverage 
 LDLIBS=
 
